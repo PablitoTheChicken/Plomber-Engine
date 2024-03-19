@@ -3,51 +3,58 @@ from pygame.locals import *
 from OpenGL.GL import *
 from OpenGL.GLU import *
 
-VBO = 0
-glBindBuffer(GL_ARRAY_BUFFER, VBO)
-glBufferData(GL_ARRAY_BUFFER, 9*4, (GLfloat*9)(1, 0, 0, 0, 1, 0, 0, 0, 1), GL_STATIC_DRAW)
+from window import Window
 
-Shader = glCreateShader(GL_VERTEX_SHADER)
-glShaderSource(Shader, "")
-glCompileShader(Shader)
 
 class Engine:
     def __init__(self):
         clock = pygame.time.Clock()
         pygame.display.init()
-        
+
+        self.window = None
         self.clock = clock
         self.deltaTime = 0
-        
+        self.running = True
+
     def createWindow(self, winSize):
-        pygame.display.set_mode(winSize, DOUBLEBUF|OPENGL)
-        glViewport(0, 0, winSize[0], winSize[1])
-        self.winSize = winSize
-        
+        newWindow = Window(winSize)
+        self.window = newWindow
+        return newWindow
+
+    def bindPipeline(self, pipeline):
+        self.pipeline = pipeline
+
     def render(self, deltaTime):
-        glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT)
-        
-        
+        if self.running == False:
+            return
+
+        glClearColor(0.2, 0.3, 0.3, 1.0)
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+
+        glBindVertexArray(self.pipeline.VAO)
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, None)
+
         pygame.display.flip()
-    
+
     def physicsStep(self, deltaTime):
-        pass
-    
+        if self.running == False:
+            return
+
     def registerEvents(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 self.close()
-                
+
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     pygame.quit()
                     self.close()
-        
+
     def tick(self, fps):
-        self.deltaTime = self.clock.tick(fps)/1000
+        self.deltaTime = self.clock.tick(fps) / 1000
         return self.deltaTime
-    
+
     def close(self):
         pygame.quit()
-        quit()
+        self.running = False
