@@ -1,42 +1,17 @@
 import math
+import glm
 
-quad_vertices = [
-    0.5,
-    0.5,
-    0.0,
-    1.0,
-    0.0,
-    0.0,
-    1.0,
-    1.0,  # top right
-    0.5,
-    -0.5,
-    0.0,
-    0.0,
-    1.0,
-    0.0,
-    1.0,
-    0.0,  # bottom right
-    -0.5,
-    -0.5,
-    0.0,
-    0.0,
-    0.0,
-    1.0,
-    0.0,
-    0.0,  # bottom left
-    -0.5,
-    0.5,
-    0.0,
-    1.0,
-    1.0,
-    0.0,
-    0.0,
-    1.0,  # top left
-]
+quad_vertices = glm.array(glm.float32,
+         0.5,  0.5, 0.0,   1.0, 0.0, 0.0,   1.0, 1.0,
+         0.5, -0.5, 0.0,   0.0, 1.0, 0.0,   1.0, 0.0,
+        -0.5, -0.5, 0.0,   0.0, 0.0, 1.0,   0.0, 0.0,
+        -0.5,  0.5, 0.0,   1.0, 1.0, 0.0,   0.0, 1.0
+    )
 
-quad_indices = [0, 1, 3, 1, 2, 3]
-
+quad_indices = glm.array(glm.uint32, 
+        0, 1, 3, # first triangle
+        1, 2, 3  # second triangle
+    )
 
 class Quad:
     def __init__(self, width=1, height=1, rotation=0):

@@ -2,7 +2,7 @@ import pygame
 from pygame.locals import *
 from OpenGL.GL import *
 from OpenGL.GLU import *
-
+import glm
 
 class Shader:
     def __init__(self, shaderType, shaderPath):
@@ -51,7 +51,8 @@ class ShaderProgram:
         glUniform4f(self.getUniformLocation(name), value1, value2, value3, value4)
 
     def setUniformMatrix4fv(self, name, matrix):
-        glUniformMatrix4fv(self.getUniformLocation(name), 1, GL_FALSE, matrix)
+        glUniformMatrix4fv(self.getUniformLocation(name), 1, GL_FALSE, glm.value_ptr(matrix))
+
 
     def clean(self):
         glDeleteProgram(self.program)

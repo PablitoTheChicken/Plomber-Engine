@@ -2,13 +2,11 @@ import pygame
 from pygame.locals import *
 from OpenGL.GL import *
 from OpenGL.GLU import *
-import numpy as np
-from PIL import Image
+import glm
 
-from shapes.quad import *
+from shapes.cube import *
 
-quad = Quad()
-
+quad = Cube()
 
 class RenderPipeline:
     def __init__(self, shaderProgram):
@@ -19,64 +17,35 @@ class RenderPipeline:
         self.shaderProgram = shaderProgram
 
         glBindVertexArray(VAO)
+        glBindBuffer(GL_ARRAY_BUFFER, VBO)
 
         glBindBuffer(GL_ARRAY_BUFFER, VBO)
-        glBufferData(
-            GL_ARRAY_BUFFER,
-            (GLfloat * len(quad.vertices))(*quad.vertices),
-            GL_STATIC_DRAW,
-        )
+        glBufferData(GL_ARRAY_BUFFER, cube_vertices.nbytes, cube_vertices.ptr, GL_STATIC_DRAW)
 
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO)
-        glBufferData(
-            GL_ELEMENT_ARRAY_BUFFER,
-            (GLint * len(quad.indices))(*quad.indices),
-            GL_STATIC_DRAW,
-        )
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO)
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, cube_indices.nbytes, cube_indices.ptr, GL_STATIC_DRAW)
 
-        img = Image.open("src/assets/container.jpg")
-        textureData = np.array(list(img.getdata()), np.int8)
-        shaderProgram.use()
-
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), None)
+        # position attribute
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * glm.sizeof(glm.float32), None)
         glEnableVertexAttribArray(0)
-
-        glVertexAttribPointer(
-            1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), 3 * sizeof(GLfloat)
-        )
+        # color attribute
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * glm.sizeof(glm.float32), ctypes.c_void_p(3 * glm.sizeof(glm.float32)))
         glEnableVertexAttribArray(1)
-
-        glVertexAttribPointer(
-            2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), 6 * sizeof(GLfloat)
-        )
+        # texture coord attribute
+        glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * glm.sizeof(glm.float32), ctypes.c_void_p(6 * glm.sizeof(glm.float32)))
         glEnableVertexAttribArray(2)
 
-        texture = glGenTextures(1)
-        glBindTexture(GL_TEXTURE_2D, texture)
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR)
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT)
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT)
-        glTexImage2D(
-            GL_TEXTURE_2D,
-            0,
-            GL_RGB,
-            img.width,
-            img.height,
-            0,
-            GL_RGB,
-            GL_UNSIGNED_BYTE,
-            textureData,
-        )
-        glGenerateMipmap(GL_TEXTURE_2D)
+        model = glm.mat4(1.0)
+        modelLoc = glGetUniformLocation(shaderProgram.program, "model")
 
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm.value_ptr(model))
         glUniform1i(glGetUniformLocation(shaderProgram.program, "texture1"), 0)
 
-        self.texture = texture
         self.VBO = VBO
         self.VAO = VAO
         self.EBO = EBO
 
     def cleanup(self):
-        glDeleteBuffers(1, VBO)
-        glDeleteVertexArrays(1, VAO)
+        glDeleteBuffers(1, self.VBO)
+        glDeleteVertexArrays(1, self.VAO)
