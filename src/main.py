@@ -16,7 +16,7 @@ def main():
     shaderProgram.link()
     shaderProgram.use()
 
-    pipeline = RenderPipeline()
+    pipeline = RenderPipeline(shaderProgram)
     engine.bindPipeline(pipeline)
 
     while engine.running == True:

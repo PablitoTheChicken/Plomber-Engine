@@ -31,6 +31,9 @@ class Engine:
         glClearColor(0.2, 0.3, 0.3, 1.0)
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
+        glActiveTexture(GL_TEXTURE0)
+        glBindTexture(GL_TEXTURE_2D, self.pipeline.texture)
+
         glBindVertexArray(self.pipeline.VAO)
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, None)
 
