@@ -10,6 +10,5 @@ class Window:
 
         glViewport(0, 0, winSize[0], winSize[1])
         glEnable(GL_DEPTH_TEST)
-        glEnable(GL_TEXTURE_2D)
 
         self.winSize = winSize

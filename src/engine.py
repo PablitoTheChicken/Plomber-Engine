@@ -29,7 +29,6 @@ class Engine:
         shaderProgram.attachShader(vertShader)
         shaderProgram.attachShader(fragShader)
         shaderProgram.link()
-        shaderProgram.use()
 
         pipeline = RenderPipeline(shaderProgram)
         self.pipeline = pipeline

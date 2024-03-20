@@ -15,6 +15,7 @@ class RenderPipeline:
         EBO = glGenBuffers(1)
 
         self.shaderProgram = shaderProgram
+        shaderProgram.use()
 
         glBindVertexArray(VAO)
         glBindBuffer(GL_ARRAY_BUFFER, VBO)
