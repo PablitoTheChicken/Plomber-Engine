@@ -22,14 +22,14 @@ class RenderPipeline:
         glBindBuffer(GL_ARRAY_BUFFER, VBO)
         glBufferData(GL_ARRAY_BUFFER, cube_vertices.nbytes, cube_vertices.ptr, GL_STATIC_DRAW)
 
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO)
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO)
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, cube_indices.nbytes, cube_indices.ptr, GL_STATIC_DRAW)
+        #glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO)
+        #glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO)
+        #glBufferData(GL_ELEMENT_ARRAY_BUFFER, cube_indices.nbytes, cube_indices.ptr, GL_STATIC_DRAW)
 
         # position attribute
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * glm.sizeof(glm.float32), None)
         glEnableVertexAttribArray(0)
-        # color attribute
+        # normal attribute
         glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * glm.sizeof(glm.float32), ctypes.c_void_p(3 * glm.sizeof(glm.float32)))
         glEnableVertexAttribArray(1)
         # texture coord attribute

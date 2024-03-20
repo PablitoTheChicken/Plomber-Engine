@@ -53,6 +53,8 @@ class ShaderProgram:
     def setUniformMatrix4fv(self, name, matrix):
         glUniformMatrix4fv(self.getUniformLocation(name), 1, GL_FALSE, glm.value_ptr(matrix))
 
+    def setUniformVec3f(self, name, vec):
+        glUniform3f(self.getUniformLocation(name), vec.x, vec.y, vec.z)
 
     def clean(self):
         glDeleteProgram(self.program)

@@ -2,6 +2,7 @@ import pygame
 from pygame.locals import *
 from OpenGL.GL import *
 from OpenGL.GLU import *
+import glm
 
 from window import Window
 from camera import Camera
@@ -9,8 +10,16 @@ from texture import Texture
 from pipeline import RenderPipeline
 from shader import ShaderProgram, Shader
 
+light_positions = [
+    glm.vec3(0.0, 0.0, 49.0),
+    glm.vec3(0.0, 0.0, -49.0),
+]
+
 class Engine:
     def __init__(self, winSize=(800, 800)):
+        clock = pygame.time.Clock()
+        camera = Camera()
+        pygame.display.init()
 
         window = Window(winSize)
         vertShader = Shader(GL_VERTEX_SHADER, "src/shaders/vert.glsl")
@@ -27,10 +36,6 @@ class Engine:
 
         texture1 = Texture(pipeline.shaderProgram, "container.jpg")
         self.texture1 = texture1
-
-        clock = pygame.time.Clock()
-        camera = Camera()
-        pygame.display.init()
 
         self.window = window
         self.clock = clock
@@ -59,10 +64,15 @@ class Engine:
         self.pipeline.shaderProgram.setUniformMatrix4fv("view", view)
         self.pipeline.shaderProgram.setUniformMatrix4fv("projection", projection)
 
+        # Lighting
+        for i in range(len(light_positions)):
+            self.pipeline.shaderProgram.setUniformVec3f(f"lightPositions[{i}]", light_positions[i])
+            self.pipeline.shaderProgram.setUniformVec3f(f"lightColors[{i}]", glm.vec3(1.0, 1.0, 1.0))
+
         # Draw
         #glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, None)
-        glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, None)
-        
+        glDrawArrays(GL_TRIANGLES, 0, 36)
+
         pygame.display.flip()
 
     def physicsStep(self, deltaTime):
