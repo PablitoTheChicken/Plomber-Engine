@@ -8,7 +8,7 @@ import glm
 
 class Camera:
     def __init__(self) -> None:
-        self.position = glm.vec3(0, 1.2, 4)
+        self.position = glm.vec3(0, 0.3, 4)
         self.front = glm.vec3(0, 0, -1)
         self.up = glm.vec3(0, 1, 0)
         self.right = glm.vec3(1, 0, 0)
@@ -36,10 +36,14 @@ class Camera:
             self.position -= glm.normalize(glm.cross(self.front, self.up)) * cameraSpeed
         if pygame.key.get_pressed()[pygame.K_d]:
             self.position += glm.normalize(glm.cross(self.front, self.up)) * cameraSpeed
+        if pygame.key.get_pressed()[pygame.K_e]:
+            self.position += cameraSpeed * self.up
+        if pygame.key.get_pressed()[pygame.K_q]:
+            self.position -= cameraSpeed * self.up
 
-    def processMouseMovement(self, xoffset, yoffset, constrainPitch=True):
-        xoffset *= 0.1
-        yoffset *= 0.1
+    def processMouseMovement(self, xoffset, yoffset, deltaTime, constrainPitch=True):
+        xoffset *= 3 * deltaTime
+        yoffset *= 3 * deltaTime
 
         self.yaw += xoffset
         self.pitch += yoffset

@@ -37,12 +37,6 @@ class RenderPipeline:
         glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * glm.sizeof(glm.float32), ctypes.c_void_p(6 * glm.sizeof(glm.float32)))
         glEnableVertexAttribArray(2)
 
-        model = glm.mat4(1.0)
-        modelLoc = glGetUniformLocation(shaderProgram.program, "model")
-
-        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm.value_ptr(model))
-        glUniform1i(glGetUniformLocation(shaderProgram.program, "texture1"), 0)
-
         self.VBO = VBO
         self.VAO = VAO
         self.EBO = EBO

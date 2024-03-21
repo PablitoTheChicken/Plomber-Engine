@@ -22,6 +22,12 @@ class ShaderProgram:
 
     def link(self):
         glLinkProgram(self.program)
+        link_success = glGetProgramiv(self.program, GL_LINK_STATUS)
+        if not link_success:
+            error_message = glGetProgramInfoLog(self.program)
+            glDeleteProgram(self.program)
+            error_message = '\n' + error_message.decode('utf-8')
+            raise Exception(error_message)
 
     def use(self):
         glUseProgram(self.program)

@@ -1,10 +1,10 @@
 from engine import *
 
 def main():
-    engine = Engine(winSize=(800, 800))
+    engine = Engine(winSize=(1400, 900))
 
     while engine.running == True:
-        deltaTime = engine.tick(60)
+        deltaTime = engine.tick(144)
 
         pygame.display.set_caption(f"FPS: {int(1 / deltaTime)}")
 
