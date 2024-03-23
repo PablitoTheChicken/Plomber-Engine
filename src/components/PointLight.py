@@ -5,9 +5,9 @@ lightIndex = 0
 
 
 class PointLight:
-    def __init__(self, position=glm.vec3(0, 0, 0), color=glm.vec3(1, 1, 1)):
+    def __init__(self, color=glm.vec3(1, 1, 1)):
         global lightIndex
-        self.position = position
+        self.parent = None
         self.color = color
         self.lightIndex = lightIndex
         lightIndex += 1
@@ -18,10 +18,10 @@ class PointLight:
         engine.engine.shaderProgram.setUniform1f("material.shininess", 32.0)
 
         engine.engine.shaderProgram.setUniformVec3f(
-            "pointLights[" + str(self.lightIndex) + "].position", self.position
+            "pointLights[" + str(self.lightIndex) + "].position", self.parent.position
         )
         engine.engine.shaderProgram.setUniformVec3f(
-            "pointLights[" + str(self.lightIndex) + "].ambient", glm.vec3(0.2)
+            "pointLights[" + str(self.lightIndex) + "].ambient", self.color
         )
         engine.engine.shaderProgram.setUniformVec3f(
             "pointLights[" + str(self.lightIndex) + "].diffuse", glm.vec3(0.8, 0.8, 0.8)

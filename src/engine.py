@@ -3,6 +3,8 @@ from pygame.locals import *
 from OpenGL.GL import *
 from OpenGL.GLU import *
 import glm
+import imgui
+
 
 from gameObject import GameObject
 from window import Window
@@ -61,11 +63,6 @@ class Engine:
         glClearColor(0.2, 0.3, 0.3, 1.0)
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
-        model = glm.mat4(1.0)
-        modelLoc = glGetUniformLocation(self.shaderProgram.program, "model")
-        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm.value_ptr(model))
-
-        # Camera
         view = self.camera.getViewMatrix()
         projection = self.camera.getProjectionMatrix(self.window.winSize)
         self.shaderProgram.setUniformMatrix4fv("view", view)
@@ -74,6 +71,13 @@ class Engine:
 
         for gameObject in self.gameObjects:
             gameObject.update(deltaTime)
+
+        imgui.new_frame()
+        imgui.begin("Your first window!", True)
+        imgui.text("Hello world!")
+        imgui.end()
+        imgui.render()
+        imgui.end_frame()
 
         pygame.display.flip()
 
@@ -91,6 +95,12 @@ class Engine:
                 if event.key == pygame.K_ESCAPE:
                     pygame.quit()
                     self.close()
+
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 4:
+                    self.camera.fov -= 1
+                if event.button == 5:
+                    self.camera.fov += 1
 
         self.camera.processInput(self.deltaTime)
 

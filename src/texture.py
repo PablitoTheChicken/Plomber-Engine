@@ -6,7 +6,10 @@ import glm
 from PIL import Image
 import os
 
-LOAD_IMAGE = lambda name: Image.open(os.path.join("src/assets/", name)).transpose(Image.FLIP_TOP_BOTTOM)
+LOAD_IMAGE = lambda name: Image.open(os.path.join("src/assets/", name)).transpose(
+    Image.FLIP_TOP_BOTTOM
+)
+
 
 class Texture:
     def __init__(self, shaderProgram, texturePath):
@@ -23,7 +26,17 @@ class Texture:
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR)
 
         img = LOAD_IMAGE(self.texturePath)
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, img.width, img.height, 0, GL_RGB, GL_UNSIGNED_BYTE, img.tobytes())
+        glTexImage2D(
+            GL_TEXTURE_2D,
+            0,
+            GL_RGB,
+            img.width,
+            img.height,
+            0,
+            GL_RGB,
+            GL_UNSIGNED_BYTE,
+            img.tobytes(),
+        )
         glGenerateMipmap(GL_TEXTURE_2D)
         img.close()
 
